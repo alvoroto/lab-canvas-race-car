@@ -4,6 +4,7 @@ function Road (){
     this.ctx = undefined;
     this.w = 400;
     this.h = 500;
+    //this.car = new Car(200, 370, 70, 100)
     this.carPosX = 200;
     this.carPosY = 370;
     this.obstacles = []
@@ -63,7 +64,7 @@ Road.prototype.moveDiscLines = function(){
         that.ctx.closePath();
         that.drawCar(that.carPosX, that.carPosY)
         that.drawObstacle()
-        that.detectCollision();
+        that.detectCollision(this.intervalID);
         if(yPos == 0){
             yPos = -600;
         }
@@ -83,24 +84,23 @@ Road.prototype.drawObstacle = function(){
     var that = this;
     this.obstacles.forEach(function(obs){
         that.ctx.fillStyle = "#FF0000";
-        that.ctx.fillRect(obs.posX, obs.posY, obs.width, obs.heigth);
+        that.ctx.fillRect(obs.posX, obs.posY, obs.width, obs.height);
     })
     
 }
 
-Road.prototype.detectCollision = function(){
+Road.prototype.detectCollision = function(intervalID){
+    //console.log(this.carPosX+"/"+this.carPosY+"   obs1: "+this.obstacles[0].posX+"/"+this.obstacles[0].posY);
     // console.log(this.carPosX+" - "+this.obstacles[0].posX+"  ,  "+this.carPosY+" - "+this.obstacles[0].posY)
-    // if (this.carPosX < this.obstacles[0].posX + this.obstacles[0].width &&
-    //     this.carPosX.posX + 70 > this.obstacles[0].posX &&
-    //     this.carPosY < this.obstacles[0].posY + this.obstacles[0].height &&
-    //     100 + this.carPosY > this.obstacles[0].posY) {
-    //         console.log("-")
-    //     }
-
-    if( this.carPosY == this.obstacles[0].posY && 
-        this.carPosX > this.obstacles[0].posX && this.carPosX < this.obstacles[0].posX + this.obstacles[0].width){
-        console.log("crash")
-    }
+    if (
+        this.carPosX + 70 >= this.obstacles[0].posX &&
+        this.obstacles[0].posX + this.obstacles[0].width >= this.carPosX &&
+        this.carPosY + 100 >= this.obstacles[0].posY &&
+        this.obstacles[0].posY + this.obstacles[0].height >= this.carPosY
+        ){
+            console.log("crash")
+            clearInterval(intervalID)
+        }
 }
 
 Road.prototype.init = function(canvasSelector) {
@@ -118,9 +118,16 @@ Road.prototype.init = function(canvasSelector) {
 
 
 
-function Obstacle( posX, posY, width, heigth) {
+function Obstacle( posX, posY, width, height) {
     this.posX = posX;
     this.posY = posY;
     this.width = width;
-    this.heigth = heigth;
+    this.height = height;
+}
+
+function Car (posX, posY, width, height) {
+    this.posX = posX;
+    this.posY = posY;
+    this.width = width;
+    this.height = height;
 }

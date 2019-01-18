@@ -1,7 +1,7 @@
 window.onload = function() {
   var road = new Road();
   road.init("#roadCanvas");
-  var obstacle1 = new Obstacle(150, -50, 100, 20)
+  var obstacle1 = new Obstacle(150, -200, 100, 20)
   road.obstacles = [obstacle1]
   document.getElementById("start-button").onclick = function() {
     startGame();
